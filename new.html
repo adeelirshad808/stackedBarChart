@@ -1,0 +1,224 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet'>
+    <title>Sarmaaya Charts</title>
+
+</head>
+<style>
+    * {
+        color: rgb(66, 65, 65);
+    }
+</style>
+
+<body>
+    <div class="container m-5  ">
+        <div class="row ">
+            <div class="col-lg-8 col-md-12 col-sm-12 m-1 bg-white">
+                <h6 class=" ">Top Points Contributor </h6>
+                <canvas id="topPointsContributor"></canvas>
+
+            </div>
+
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js"
+        integrity="sha512-R/QOHLpV1Ggq22vfDAWYOaMd5RopHrJNMxi8/lJu8Oihwi4Ho4BRFeiMiCefn9rasajKjnx9/fTQ/xkWnkDACg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        Chart.register(ChartDataLabels);
+        //global variables
+
+
+
+        function createChart(Gainers, Losers) {
+            return {
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Top Gainers',
+                        data: Gainers,
+                        backgroundColor: '#2FC798',
+                        borderColor: '#2FC798',
+                        pointStyle: 'rectRot',
+                        datalabels: {
+                            align: 'start',
+                            anchor: 'end',
+                            align: 'end',
+                            offset: 4,
+                            color: '#2FC798',
+                        },
+
+                    }, {
+                        type: 'bar',
+                        data: Losers,
+                        label: 'Top Losers',
+                        backgroundColor: '#C72151',
+                        borderColor: '#C72151',
+                        pointStyle: 'rectRot',
+                        datalabels: {
+                            align: 'start',
+                            anchor: 'start',
+                            align: 'start',
+                            offset: 2,
+                            color: '#C72151'
+
+                        },
+
+                    },
+                ],
+
+
+            }
+
+        }
+
+        function chartStyling() {
+            return {
+                parsing: {
+                    xAxisKey: 'name',
+                    yAxisKey: 'value'
+                },
+                responsive: true,
+
+                interaction: {
+                    mode: 'index',
+                    intersect: 'index'
+                },
+                layout: {
+                    padding: 20
+                },
+                elements: {
+                    point: {
+                        hoverRadius: 6
+                    }
+                },
+                plugins: {
+                    tooltip: {
+
+                        enabled: true,
+                        backgroundColor: 'grey',
+                        borderWidth: 20,
+
+                        callbacks: {
+                            label: function (context) {
+                                console.log('context', context.formattedValue)
+
+                                return context.label + ': ' + context.formattedValue
+                            }
+                        }
+
+                    },
+                    elements: {
+                        point: {
+                            pointStyle: 'rect'
+                        }
+
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            boxWidth: 5,
+                            usePointStyle: true,
+                        }
+
+                    },
+                    datalabels: {
+                        display: true,
+                        borderWidth: 0.5,
+                        color: 'black',
+
+                        formatter: function (value, context) {
+                            console.log('value', value.value)
+                            return context.chart.data.labels[context.dataIndex] + '\n' + value.value;
+                        },
+                        font: {
+                            size: 11,
+                            weight: 'bold',
+
+                        }
+
+                    }
+                },
+                scales: {
+
+                    y: {
+                        display: false,
+                        grid: {
+                            display: false,
+                            lineWidth: 3
+                        },
+
+
+
+
+                    },
+                    x: {
+                        display: false,
+                        grid: {
+                            display: false,
+                        },
+                        stacked: true
+                    }
+                }
+            }
+
+        }
+
+
+
+        var Gainers = [
+            {
+                name: 'FFC', value: 12.78
+            },
+            {
+                name: 'MEBL', value: 10.03
+            },
+            {
+                name: 'MTL', value: 8.92
+            },
+            {
+                name: 'INDU', value: 7.92
+            },
+        ]
+        var Losers = [
+            {
+                name: 'TRG', value: -6.99
+            },
+            {
+                name: 'ATRL', value: -4.99
+            },
+            {
+                name: 'NRL', value: -8.03
+            },
+            {
+                name: 'BYCO', value: -6.62
+            },
+        ]
+
+        var ctx = document.getElementById('topPointsContributor').getContext('2d');
+
+        var myChart = new Chart(ctx, {
+            data: createChart(Gainers, Losers),
+            options: chartStyling()
+        })
+    </script>
+
+</body>
+
+</html>
